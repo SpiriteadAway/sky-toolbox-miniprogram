@@ -46,7 +46,7 @@
   "compileType": "miniprogram",
   "cloudfunctionRoot": "cloudfunctions/",
   "libVersion": "3.16.1",
-  "appid": "wx845f61de0b326b75",
+  "appid": "YOUR_WECHAT_APPID",
   "projectname": "sky-toolbox",
   "condition": {},
   "simulatorPluginLibVersion": {},

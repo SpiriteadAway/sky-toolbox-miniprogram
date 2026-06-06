@@ -1,4 +1,4 @@
-const API_KEY = 'yQOWdbECiAUu9rBUscyz6zRvYh';
+const API_KEY = 'YOUR_T1QQ_API_KEY';
 const BASE_URL = 'https://api.t1qq.com';
 
 /**
@@ -44,8 +44,8 @@ function getCalendarImageUrl() {
 }
 
 module.exports = {
-  API_KEY,
   BASE_URL,
+  API_KEY,
   request,
   getDailyTasksImageUrl,
   getCalendarImageUrl
