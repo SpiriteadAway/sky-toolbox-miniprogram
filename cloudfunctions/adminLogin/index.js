@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 
-const ADMIN_SECRET = 'xiaomoadmin';
+const ADMIN_SECRET = '***';
 
 exports.main = async (event, context) => {
   const { adminSecret } = event;
