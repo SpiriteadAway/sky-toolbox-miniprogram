@@ -1,0 +1,45 @@
+/* ====== 蜡烛位置页 ====== */
+
+/* Tab */
+.tab-bar {
+  display: flex; background: #fff; border-radius: 16rpx;
+  margin-bottom: 24rpx; overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+.tab-item {
+  flex: 1; text-align: center; padding: 22rpx 0;
+  font-size: 28rpx; color: #9ca3af;
+  border-bottom: 3rpx solid transparent;
+  transition: all 0.15s;
+}
+.tab-item.active {
+  color: #6366f1; font-weight: 700;
+  border-bottom-color: #6366f1;
+}
+.tab-item:active { background: #f9fafb; }
+
+/* 图片区 */
+.image-area { min-height: 400rpx; }
+.candle-img {
+  width: 100%; border-radius: 16rpx; display: block;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  opacity: 0; transition: opacity 0.3s;
+}
+.candle-img.loaded { opacity: 1; }
+
+/* 操作按钮 */
+.img-actions {
+  display: flex; gap: 16rpx; margin-top: 20rpx;
+}
+.img-btn {
+  flex: 1; height: 80rpx; line-height: 80rpx;
+  background: #f4f5f7; color: #6366f1;
+  font-size: 26rpx; border-radius: 14rpx;
+  border: none; text-align: center;
+}
+.img-btn:active { background: #ede9fe; }
+
+/* 说明 */
+.desc-item {
+  font-size: 26rpx; color: #6b7280; line-height: 2; padding-left: 4rpx;
+}

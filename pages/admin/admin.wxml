@@ -1,0 +1,245 @@
+<!-- 管理后台 -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">⚙️</text>
+    <view class="header-title">管理后台</view>
+    <view class="header-subtitle">用户额度管理 · 充值审批</view>
+  </view>
+
+  <view class="page-body fade-in" style="padding-top:30rpx">
+
+    <!-- ========== 未登录管理后台 ========== -->
+    <block wx:if="{{!isAdmin}}">
+      <view class="card" style="text-align:center">
+        <view class="empty-icon">🔐</view>
+        <view class="empty-text">请输入管理员密钥</view>
+        <view style="margin-top:20rpx">
+          <input 
+            class="field-input" 
+            type="password"
+            placeholder="请输入管理员密钥"
+            value="{{adminSecret}}"
+            bindinput="onSecretInput"
+            style="text-align:center"
+          />
+        </view>
+        <button class="btn-primary" style="margin-top:24rpx" bindtap="handleAdminLogin">验证</button>
+      </view>
+    </block>
+
+    <!-- ========== 管理后台主页 ========== -->
+    <block wx:else>
+      <!-- 工具栏 -->
+      <view class="card" style="margin-bottom:24rpx">
+        <view class="section-label">🔍 工具</view>
+        <view class="admin-tool-row" bindtap="handleGetMyOpenId">
+          <text class="atr-icon">🆔</text>
+          <text class="atr-text">查看我的 openId（用于测试）</text>
+          <text class="atr-arrow">›</text>
+        </view>
+        <view class="admin-tool-row" bindtap="handleLogout">
+          <text class="atr-icon">🚪</text>
+          <text class="atr-text danger-text">退出管理后台</text>
+          <text class="atr-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- ====== Tab 切换 ====== -->
+      <view class="tab-switch">
+        <view class="tab-item {{activeTab === 'users' ? 'active' : ''}}" data-tab="users" bindtap="switchTab">
+          <text>👥 用户管理</text>
+        </view>
+        <view class="tab-item {{activeTab === 'topup' ? 'active' : ''}}" data-tab="topup" bindtap="switchTab">
+          <text>💳 充值审批</text>
+          <view class="tab-badge" wx:if="{{topupFilter === 'pending' && topupTotal > 0}}">{{topupTotal}}</view>
+        </view>
+        <view class="tab-item {{activeTab === 'settings' ? 'active' : ''}}" data-tab="settings" bindtap="switchTab">
+          <text>⚙️ 系统设置</text>
+        </view>
+      </view>
+
+      <!-- ====== 用户管理 ====== -->
+      <block wx:if="{{activeTab === 'users'}}">
+        <!-- 搜索用户 -->
+        <view class="card">
+          <view class="section-label">🔍 搜索用户</view>
+          <view class="search-row">
+            <input class="search-input" placeholder="输入用户昵称搜索" value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="handleSearch" />
+            <button class="search-btn" bindtap="handleSearch" loading="{{searching}}">搜索</button>
+          </view>
+
+          <view class="search-results" wx:if="{{searchResult}}">
+            <view class="sr-header">
+              <text class="sr-count">共 {{searchResult.total}} 个用户</text>
+            </view>
+            <block wx:if="{{searchResult.list.length > 0}}">
+              <view class="sr-item {{selectedUser._openid === item._openid ? 'selected' : ''}}" wx:for="{{searchResult.list}}" wx:key="_id" data-user="{{item}}" bindtap="onSelectUser">
+                <view class="sri-info">
+                  <view class="sri-name">{{item.nickName || '未命名'}}</view>
+                  <view class="sri-meta">
+                    <text class="sri-level">{{item.memberLevel === 'lifetime' ? '💎永久' : item.memberLevel === 'year' ? '👑年度' : item.memberLevel === 'month' ? '🌟月度' : '🆓免费'}}</text>
+                    <text class="sri-credit">剩余 {{item.credits || 0}} 次</text>
+                    <text class="sri-total">已用 {{item.totalQueries || 0}} 次</text>
+                  </view>
+                </view>
+                <text class="sri-check">{{selectedUser._openid === item._openid ? '✅' : '○'}}</text>
+              </view>
+            </block>
+            <view class="empty-state" wx:else>
+              <view class="empty-icon">🔍</view>
+              <view class="empty-text" style="font-size:24rpx">没有找到匹配的用户</view>
+            </view>
+          </view>
+          <view class="search-error" wx:if="{{searchError}}">{{searchError}}</view>
+        </view>
+
+        <!-- 赠送额度 -->
+        <view class="card" wx:if="{{selectedUser}}" style="margin-top:24rpx">
+          <view class="section-label">🎁 赠送额度</view>
+          <view class="selected-user-info">
+            <view class="sui-header">
+              <view class="sui-name">{{selectedUser.nickName || '未命名'}}</view>
+              <view class="sui-id">{{selectedUser._openid}}</view>
+              <view class="sui-clear" bindtap="onClearSelection">✕</view>
+            </view>
+            <view class="sui-stats">
+              <text>当前额度：<text class="sui-val">{{selectedUser.credits || 0}}</text> 次</text>
+              <text>·</text>
+              <text>已用：<text class="sui-val">{{selectedUser.totalQueries || 0}}</text> 次</text>
+            </view>
+          </view>
+
+          <view class="form-group">
+            <view class="form-label">赠送数量</view>
+            <view class="quick-amount-row">
+              <view class="qam-item {{addAmount === item ? 'active' : ''}}" wx:for="{{quickAmounts}}" wx:key="*this" data-amount="{{item}}" bindtap="onQuickAmount">+{{item}}次</view>
+            </view>
+            <input class="field-input" type="number" placeholder="自定义数量" value="{{addAmount}}" bindinput="onAmountInput" />
+          </view>
+
+          <view class="form-group">
+            <view class="form-label">赠送原因（选填）</view>
+            <input class="field-input" placeholder="例如：老用户回馈" value="{{addReason}}" bindinput="onReasonInput" />
+          </view>
+
+          <button class="btn-primary" bindtap="handleAddCredits" loading="{{adding}}" disabled="{{adding}}">
+            {{adding ? '赠送中...' : '确认赠送 ' + addAmount + ' 次'}}
+          </button>
+
+          <view class="add-result success" wx:if="{{addResult && addResult.success}}">
+            <view class="ar-icon">✅</view>
+            <view class="ar-msg">{{addResult.msg}}</view>
+            <view class="ar-detail" wx:if="{{addResult.detail}}">{{addResult.detail.creditsBefore}} → {{addResult.detail.creditsAfter}} 次</view>
+          </view>
+          <view class="add-result fail" wx:elif="{{addResult && !addResult.success}}">
+            <view class="ar-icon">❌</view>
+            <view class="ar-msg">{{addResult.msg}}</view>
+          </view>
+        </view>
+      </block>
+
+      <!-- ====== 充值审批 ====== -->
+      <block wx:if="{{activeTab === 'topup'}}">
+        <!-- 筛选 -->
+        <view class="card">
+          <view class="filter-row">
+            <view class="filter-item {{topupFilter === 'pending' ? 'active' : ''}}" data-filter="pending" bindtap="onTopupFilter">
+              待审批{{topupFilter === 'pending' && topupTotal > 0 ? ' (' + topupTotal + ')' : ''}}
+            </view>
+            <view class="filter-item {{topupFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="onTopupFilter">
+              全部
+            </view>
+            <button class="filter-refresh" bindtap="loadTopupRequests">🔄 刷新</button>
+          </view>
+        </view>
+
+        <!-- 列表 -->
+        <view class="card" style="margin-top:0">
+          <!-- 加载中 -->
+          <view class="loading-block" wx:if="{{topupLoading}}" style="padding:60rpx 0">
+            <view class="spinner"></view>
+            <view class="loading-text">加载中...</view>
+          </view>
+
+          <!-- 空 -->
+          <view class="empty-state" wx:elif="{{topupList.length === 0}}" style="padding:60rpx 0">
+            <view class="empty-icon" style="font-size:64rpx">🎉</view>
+            <view class="empty-text" style="font-size:24rpx">{{topupFilter === 'pending' ? '没有待审批的申请' : '暂无充值申请'}}</view>
+          </view>
+
+          <!-- 申请列表 -->
+          <block wx:else>
+            <view class="topup-item {{item.status}}" wx:for="{{topupList}}" wx:key="_id">
+              <view class="ti-header">
+                <view class="ti-user">{{item.nickName || '未知用户'}}</view>
+                <view class="ti-status {{item.status}}">
+                  {{item.status === 'pending' ? '⏳ 待审批' : item.status === 'approved' ? '✅ 已通过' : '❌ 已拒绝'}}
+                </view>
+              </view>
+              <view class="ti-body">
+                <view class="ti-amount">赞赏 <text class="ti-val">¥{{item.amount}}</text></view>
+                <view class="ti-credits">→ <text class="ti-val">{{item.credits}}</text> 次额度</view>
+                <view class="ti-order" wx:if="{{item.orderNo || item.note}}">📋 订单号：<text class="ti-order-no">{{item.orderNo || item.note}}</text></view>
+                <view class="ti-time">{{item.createdAt}}</view>
+              </view>
+              <view class="ti-actions" wx:if="{{item.status === 'pending'}}">
+                <button class="ti-btn ti-reject" data-request="{{item}}" bindtap="handleReject" loading="{{approving === item._id}}">拒绝</button>
+                <button class="ti-btn ti-approve" data-request="{{item}}" bindtap="handleApprove" loading="{{approving === item._id}}">通过</button>
+              </view>
+            </view>
+          </block>
+        </view>
+
+        <!-- 说明 -->
+        <view class="card" style="margin-top:20rpx">
+          <view class="section-label">📌 充值审批说明</view>
+          <view class="desc-item">• 用户赞赏后生成订单号并提交申请</view>
+          <view class="desc-item">• 请核对微信收款记录中的订单号后审批</view>
+          <view class="desc-item">• 审批通过后额度 <text style="color:#10b981;font-weight:600">自动到账</text></view>
+        </view>
+      </block>
+
+      <!-- ====== 系统设置 ====== -->
+      <block wx:if="{{activeTab === 'settings'}}">
+        <view class="card">
+          <view class="section-label">🧪 功能免费开关</view>
+          <view class="desc-item" style="margin-bottom:20rpx">
+            单独控制每个功能的收费状态。开启后该功能不消耗额度，适合内测或回馈活动。
+          </view>
+
+          <!-- 身高查询 -->
+          <view class="setting-row">
+            <view class="setting-info">
+              <text class="setting-name">📏 身高查询</text>
+              <text class="setting-desc">{{freeFeatures.height ? '🟢 免费中' : '⚫ 正常扣费'}}</text>
+            </view>
+            <switch
+              checked="{{freeFeatures.height}}"
+              data-feature="height"
+              bindchange="toggleFeatureFree"
+              color="#10b981"
+              disabled="{{freeFeatureLoading === 'height'}}"
+            />
+          </view>
+
+          <!-- 礼包查询 -->
+          <view class="setting-row">
+            <view class="setting-info">
+              <text class="setting-name">🎁 礼包查询</text>
+              <text class="setting-desc">{{freeFeatures.gift ? '🟢 免费中' : '⚫ 正常扣费'}}</text>
+            </view>
+            <switch
+              checked="{{freeFeatures.gift}}"
+              data-feature="gift"
+              bindchange="toggleFeatureFree"
+              color="#10b981"
+              disabled="{{freeFeatureLoading === 'gift'}}"
+            />
+          </view>
+        </view>
+      </block>
+
+      <view style="height:40rpx"></view>
+    </block>
+  </view>
+</view>

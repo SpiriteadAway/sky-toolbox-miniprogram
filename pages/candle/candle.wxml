@@ -1,0 +1,69 @@
+<!-- 蜡烛位置 -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">🕯️</text>
+    <view class="header-title">蜡烛位置</view>
+    <view class="header-subtitle">每日大蜡烛 & 季节蜡烛位置指南</view>
+  </view>
+
+  <view class="page-body fade-in" style="padding-top:30rpx">
+    <!-- Tab 切换 -->
+    <view class="tab-bar">
+      <view 
+        class="tab-item {{tabIndex === index ? 'active' : ''}}" 
+        wx:for="{{tabs}}" 
+        wx:key="key"
+        wx:for-index="index"
+        data-index="{{index}}"
+        bindtap="switchTab"
+      >
+        <text>{{item.icon}} {{item.name}}</text>
+      </view>
+    </view>
+
+    <!-- 图片区 -->
+    <view class="image-area">
+      <!-- 加载中 -->
+      <view class="loading-block" wx:if="{{loading[tabIndex]}}">
+        <view class="spinner"></view>
+        <view class="loading-text">加载中...</view>
+      </view>
+
+      <!-- 错误 -->
+      <view class="card empty-state" wx:elif="{{errors[tabIndex]}}">
+        <view class="empty-icon">😞</view>
+        <view class="empty-text" style="white-space:pre-wrap">{{errors[tabIndex]}}</view>
+        <button 
+          class="btn-primary" 
+          style="width:240rpx;height:72rpx;line-height:72rpx;font-size:26rpx" 
+          data-index="{{tabIndex}}"
+          bindtap="onRetry"
+        >重新加载</button>
+      </view>
+
+      <!-- 图片 -->
+      <block wx:else>
+        <image 
+          class="candle-img {{loaded[tabIndex] ? 'loaded' : ''}}" 
+          src="{{images[tabIndex]}}" 
+          mode="widthFix"
+          show-menu-by-longpress
+          data-index="{{tabIndex}}"
+          bindload="onImageLoad"
+          binderror="onRetry"
+        />
+        <view class="img-actions" wx:if="{{loaded[tabIndex]}}">
+          <button class="img-btn" bindtap="onPreview">🔍 查看大图</button>
+          <button class="img-btn" bindtap="onSave">💾 保存到相册</button>
+        </view>
+      </block>
+    </view>
+
+    <!-- 提示 -->
+    <view class="card" style="margin-top:24rpx" wx:if="{{loaded[tabIndex]}}">
+      <view class="section-label">📌 说明</view>
+      <view class="desc-item">• 长按图片可保存到相册</view>
+      <view class="desc-item">• 大蜡烛位置每日刷新；季节蜡烛随季节更新</view>
+    </view>
+  </view>
+</view>

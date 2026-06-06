@@ -1,0 +1,60 @@
+<!-- 天气预报页 -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">🌤️</text>
+    <view class="header-title">天气预报</view>
+    <view class="header-subtitle">查看红石 / 黑石天气预测</view>
+  </view>
+
+  <view class="page-body fade-in">
+    <!-- 加载 -->
+    <view class="loading-block" wx:if="{{loading}}">
+      <view class="spinner"></view>
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <!-- 错误 -->
+    <view class="card empty-state" wx:if="{{error}}">
+      <view class="empty-icon">😞</view>
+      <view class="empty-text">{{error}}</view>
+      <button class="btn-primary" style="width:240rpx;height:72rpx;line-height:72rpx;font-size:26rpx" bindtap="fetchWeather">重新加载</button>
+    </view>
+
+    <!-- 空 -->
+    <view class="card empty-state" wx:if="{{!loading && !error && images.length === 0}}">
+      <view class="empty-icon">📭</view>
+      <view class="empty-text">暂无天气数据</view>
+    </view>
+
+    <!-- 天气图片 -->
+    <view wx:if="{{!loading && !error && images.length > 0}}">
+      <view class="tip-bar">
+        <text>💡 长按图片可保存到相册</text>
+      </view>
+
+      <view class="weather-item card" wx:for="{{images}}" wx:key="index" style="padding:16rpx;overflow:hidden">
+        <view class="weather-label">{{index === 0 ? '📷 当前天气' : '📷 未来天气'}}</view>
+        <image 
+          wx:if="{{!failedImages[index]}}"
+          class="page-img" 
+          src="{{item}}" 
+          mode="widthFix"
+          show-menu-by-longpress
+          binderror="onImgError"
+          data-index="{{index}}"
+        />
+        <view wx:if="{{failedImages[index]}}" class="img-fallback">
+          <text class="img-fallback-icon">🖼️</text>
+          <text class="img-fallback-text">图片加载失败</text>
+          <button class="btn-outline img-retry-btn" bindtap="retryImage" data-index="{{index}}">
+            🔄 重试加载
+          </button>
+        </view>
+      </view>
+
+      <button class="btn-outline" style="margin-top:20rpx" bindtap="fetchWeather" loading="{{loading}}">
+        🔄 刷新数据
+      </button>
+    </view>
+  </view>
+</view>

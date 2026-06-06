@@ -1,0 +1,104 @@
+<!-- 首页 · Sky小精灵 -->
+<view class="page-container">
+  <!-- 顶部 -->
+  <view class="hero">
+    <view class="hero-glow"></view>
+    <view class="hero-content">
+      <view class="hero-icon">🕯️</view>
+      <view class="hero-title">Sky小精灵</view>
+      <view class="hero-sub">Sky · Children of the Light</view>
+    </view>
+  </view>
+
+  <!-- 用户卡片 -->
+  <view class="page-body">
+    <view class="user-card" bindtap="goToMine">
+      <block wx:if="{{isLoggedIn}}">
+        <image class="user-avatar" src="{{profile.avatarPath}}" mode="aspectFill" />
+        <view class="user-info">
+          <view class="user-name">{{profile.nickName}}</view>
+          <view class="user-hint" wx:if="{{memberInfo && memberInfo.registered}}">
+            剩余 <text class="hint-credit">{{memberInfo.credits || 0}}</text> 次 · 查看会员中心 ›
+          </view>
+          <view class="user-hint" wx:else>查看个人中心 ›</view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="user-avatar-placeholder">👤</view>
+        <view class="user-info">
+          <view class="user-name">点击登录</view>
+          <view class="user-hint">登录后可保存测量记录</view>
+        </view>
+      </block>
+      <view class="user-badge" wx:if="{{isLoggedIn}}">已登录</view>
+    </view>
+
+    <!-- 功能入口 -->
+    <view class="section-label">⚡ 功能</view>
+    
+    <view class="func-grid">
+      <navigator url="/pages/height/height" class="func-card fade-in stagger-item">
+        <view class="func-icon-wrap icon-purple">
+          <view class="func-icon">📏</view>
+        </view>
+        <view class="func-name">身高查询</view>
+        <view class="func-desc">输入好友码查数值</view>
+      </navigator>
+
+      <navigator url="/pages/gift/gift" class="func-card fade-in stagger-item">
+        <view class="func-icon-wrap icon-green">
+          <view class="func-icon">🎁</view>
+        </view>
+        <view class="func-name">礼包查询</view>
+        <view class="func-desc">兑换ID查礼包详情</view>
+      </navigator>
+
+      <navigator url="/pages/tasks/tasks" class="func-card fade-in stagger-item">
+        <view class="func-icon-wrap icon-blue">
+          <view class="func-icon">📋</view>
+        </view>
+        <view class="func-name">每日任务</view>
+        <view class="func-desc">任务位置指南</view>
+      </navigator>
+
+      <navigator url="/pages/candle/candle" class="func-card fade-in stagger-item">
+        <view class="func-icon-wrap icon-amber">
+          <view class="func-icon">🕯️</view>
+        </view>
+        <view class="func-name">蜡烛位置</view>
+        <view class="func-desc">大蜡烛&季蜡指南</view>
+      </navigator>
+
+      <navigator url="/pages/weather/weather" class="func-card fade-in stagger-item">
+        <view class="func-icon-wrap icon-cyan">
+          <view class="func-icon">🌤️</view>
+        </view>
+        <view class="func-name">天气预报</view>
+        <view class="func-desc">红石黑石预测</view>
+      </navigator>
+
+      <navigator url="/pages/countdown/countdown" class="func-card fade-in stagger-item">
+        <view class="func-icon-wrap icon-amber">
+          <view class="func-icon">⏳</view>
+        </view>
+        <view class="func-name">季节倒计时</view>
+        <view class="func-desc">季节剩余时间</view>
+      </navigator>
+
+      <navigator url="/pages/guangyi/guangyi" class="func-card fade-in stagger-item">
+        <view class="func-icon-wrap icon-pink">
+          <view class="func-icon">✨</view>
+        </view>
+        <view class="func-name">光翼查询</view>
+        <view class="func-desc">光翼收集进度追踪</view>
+      </navigator>
+    </view>
+
+    <!-- 底部 -->
+    <view class="footer">
+      <text>由小陌制作</text>
+      <text class="footer-sep">·</text>
+      <text>v2.3.1</text>
+    </view>
+  </view>
+</view>

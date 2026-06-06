@@ -1,0 +1,84 @@
+<!-- 季节倒计时页 -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">⏳</text>
+    <view class="header-title">季节倒计时</view>
+    <view class="header-subtitle">查看季节剩余时间与毕业进度</view>
+  </view>
+
+  <view class="page-body fade-in">
+    <!-- 加载 -->
+    <view class="loading-block" wx:if="{{loading}}">
+      <view class="spinner"></view>
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <!-- 错误 -->
+    <view class="card empty-state" wx:if="{{error}}">
+      <view class="empty-icon">😞</view>
+      <view class="empty-text">{{error}}</view>
+      <button class="btn-primary" style="width:240rpx;height:72rpx;line-height:72rpx;font-size:26rpx" bindtap="fetchCountdown">重新加载</button>
+    </view>
+
+    <!-- 数据 -->
+    <view wx:if="{{!loading && !error && data}}">
+      <!-- 主倒计时卡 -->
+      <view class="countdown-hero">
+        <view class="cd-glow"></view>
+        <view class="cd-number">{{data.day || '--'}}</view>
+        <view class="cd-label">剩余天数</view>
+      </view>
+
+      <!-- 描述 -->
+      <view class="card" wx:if="{{data.days}}">
+        <view class="desc-text">{{data.days}}</view>
+      </view>
+
+      <view class="card" wx:if="{{data.time}}">
+        <view class="desc-label">🕐 当前服务器时间</view>
+        <view class="desc-text">{{data.time}}</view>
+      </view>
+
+      <!-- 毕业进度 -->
+      <view class="card" wx:if="{{data.data}}">
+        <view class="section-label">📊 毕业进度详情</view>
+        
+        <view class="progress-grid">
+          <view class="progress-item">
+            <view class="pi-icon">🎫</view>
+            <view class="pi-label">有季卡毕业</view>
+            <view class="pi-value">{{data.data.seasonal || '--'}}</view>
+          </view>
+          
+          <view class="progress-item">
+            <view class="pi-icon">🆓</view>
+            <view class="pi-label">无季卡毕业</view>
+            <view class="pi-value">{{data.data.notSeasonal || '--'}}</view>
+          </view>
+          
+          <view class="progress-item">
+            <view class="pi-icon">🕯️</view>
+            <view class="pi-label">有季卡可得</view>
+            <view class="pi-value">{{data.data.reward || '--'}}</view>
+          </view>
+          
+          <view class="progress-item">
+            <view class="pi-icon">🕯️</view>
+            <view class="pi-label">无季卡可得</view>
+            <view class="pi-value">{{data.data.orderReward || '--'}}</view>
+          </view>
+        </view>
+
+        <view class="progress-item-wide">
+          <view class="pi-icon">🎓</view>
+          <view class="pi-label">毕业所需</view>
+          <view class="pi-value">{{data.data.grad || '--'}}</view>
+        </view>
+      </view>
+
+      <button class="btn-outline" style="margin-top:20rpx" bindtap="fetchCountdown" loading="{{loading}}">
+        🔄 刷新数据
+      </button>
+    </view>
+  </view>
+</view>

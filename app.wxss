@@ -1,0 +1,375 @@
+/* ============================================
+   光遇工具箱 — 全局样式 v2
+   设计语言: 星空夜话 · 暖光烛影
+   适配: rpx 自适应 + 刘海屏安全区 + 淡入淡出动画
+   ============================================ */
+
+/* ====== 基础变量 ====== */
+page {
+  --safe-area-top: 0px;
+  --safe-area-bottom: 0px;
+  --nav-bar-height: 0px;
+  --screen-width: 750rpx;
+
+  background-color: #f0f2f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: 28rpx;
+  color: #1e1b4b;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ====== 通用页面容器 ====== */
+.page-container {
+  min-height: 100vh;
+  padding-bottom: calc(40rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+}
+
+/* ====== 通用顶部 Header ====== */
+.page-header {
+  background: linear-gradient(160deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%);
+  padding: 36rpx 32rpx 28rpx;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1rpx;
+  left: 0;
+  right: 0;
+  height: 30rpx;
+  background: #f0f2f5;
+  border-radius: 30rpx 30rpx 0 0;
+}
+
+.header-icon {
+  font-size: 44rpx;
+  margin-bottom: 8rpx;
+  display: block;
+  filter: drop-shadow(0 2rpx 4rpx rgba(0,0,0,0.2));
+  animation: headerBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.header-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4rpx;
+  letter-spacing: 2rpx;
+  animation: fadeSlideDown 0.4s 0.1s ease-out both;
+}
+
+.header-subtitle {
+  font-size: 22rpx;
+  color: rgba(255,255,255,0.55);
+  animation: fadeSlideDown 0.4s 0.2s ease-out both;
+}
+
+/* ====== 通用内容区 ====== */
+.page-body {
+  padding: 0 30rpx;
+}
+
+/* ====== 通用卡片 ====== */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+  transition: all 0.2s ease;
+}
+
+.card-flat {
+  box-shadow: none;
+  border: 1rpx solid #f0f0f0;
+}
+
+.card:active {
+  transform: scale(0.985);
+  box-shadow: 0 1rpx 6rpx rgba(0,0,0,0.02);
+}
+
+/* ====== 通用 Section 标题 ====== */
+.section-label {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #9ca3af;
+  padding: 8rpx 4rpx 14rpx;
+  letter-spacing: 1rpx;
+}
+
+/* ====== 通用按钮 ====== */
+.btn-primary {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 14rpx;
+  border: none;
+  box-shadow: 0 6rpx 20rpx rgba(99,102,241,0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+.btn-primary[disabled] {
+  background: #d4d4d8;
+  color: #a1a1aa;
+  box-shadow: none;
+}
+
+.btn-outline {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 14rpx;
+  font-size: 28rpx;
+  color: #6366f1;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.btn-outline:active {
+  background: #f5f3ff;
+  border-color: #6366f1;
+}
+
+/* ====== 加载状态 ====== */
+.loading-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.spinner {
+  width: 56rpx;
+  height: 56rpx;
+  border: 4rpx solid #e5e7eb;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 26rpx;
+  color: #9ca3af;
+}
+
+/* ====== 错误/空状态 ====== */
+.empty-state {
+  text-align: center;
+  padding: 80rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.8;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #9ca3af;
+  margin-bottom: 30rpx;
+}
+
+/* ====== Tips 提示条 ====== */
+.tip-bar {
+  background: #fef9c3;
+  border-radius: 10rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.tip-bar text {
+  font-size: 24rpx;
+  color: #a16207;
+}
+
+/* ============================================
+   动画系统
+   ============================================ */
+
+/* 淡入上移（页面元素入场） */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-12rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(20rpx); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeScaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* 弹窗入场 */
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(60rpx) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 遮罩入场 */
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 图标弹跳 */
+@keyframes headerBounce {
+  0%   { opacity: 0; transform: scale(0.3); }
+  50%  { transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* 脉冲光晕 */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.3); }
+  50%      { box-shadow: 0 0 0 12rpx rgba(99,102,241,0); }
+}
+
+/* 闪烁 */
+@keyframes shimmer {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6rpx); }
+}
+
+/* ====== 动画应用类 ====== */
+.fade-in {
+  animation: fadeIn 0.35s ease-out both;
+}
+.fade-in-fast {
+  animation: fadeIn 0.2s ease-out both;
+}
+.fade-in-slow {
+  animation: fadeIn 0.5s ease-out both;
+}
+.fade-slide-down {
+  animation: fadeSlideDown 0.35s ease-out both;
+}
+.fade-slide-left {
+  animation: fadeSlideLeft 0.35s ease-out both;
+}
+.fade-scale-in {
+  animation: fadeScaleIn 0.3s ease-out both;
+}
+
+/* 交错入场（给列表项用） */
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.10s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.20s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.30s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.40s; }
+
+/* 弹窗动画 */
+.modal-overlay {
+  animation: overlayFadeIn 0.25s ease-out;
+}
+.modal-box {
+  animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 浮起 */
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+/* 光晕脉冲 */
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+/* 闪烁加载 */
+.shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   设备适配工具
+   ============================================ */
+
+/* 刘海屏底部安全区兼容 */
+.safe-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+.safe-area-inset {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 底部固定栏自动适配 */
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #fff;
+  z-index: 100;
+}
+
+/* 触摸反馈（全局） */
+.touchable {
+  transition: transform 0.15s ease;
+}
+.touchable:active {
+  transform: scale(0.96);
+}
+
+/* ============================================
+   小屏优化 (iPhone SE / 320pt 宽度)
+   ============================================ */
+@media screen and (max-width: 340px) {
+  .card { padding: 22rpx; }
+  .btn-primary { height: 80rpx; line-height: 80rpx; font-size: 28rpx; }
+  .page-header { padding: 28rpx 24rpx 22rpx; }
+  .header-title { font-size: 28rpx; }
+}
+
+/* ============================================
+   暗黑模式兼容（后续可选）
+   ============================================ */
+/*
+@media (prefers-color-scheme: dark) {
+  page { background-color: #1a1a2e; color: #e0e0e0; }
+  .card { background: #252545; }
+}
+*/

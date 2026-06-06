@@ -1,0 +1,257 @@
+<!--
+  我的 Tab
+  使用微信「头像昵称填写能力」
+-->
+<view class="page-container">
+  <!-- ========== 未登录 ========== -->
+  <block wx:if="{{!isLoggedIn}}">
+    <view class="page-header" style="padding-bottom:80rpx">
+      <text class="header-icon">🕯️</text>
+      <view class="header-title">光遇工具箱</view>
+      <view class="header-subtitle">设置头像和昵称，开启你的工具箱</view>
+    </view>
+
+    <view class="page-body fade-in">
+      <view class="card">
+        <view class="section-label">👤 设置头像</view>
+        <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image class="avatar-preview" src="{{avatarPath || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="avatar-tip">点击选择头像</view>
+        </button>
+      </view>
+
+      <view class="card">
+        <view class="section-label">✏️ 设置昵称</view>
+        <input 
+          class="field-input" 
+          type="nickname" 
+          placeholder="点击输入昵称"
+          value="{{nickName}}"
+          bindinput="onNicknameInput"
+          bindblur="onNicknameBlur"
+        />
+      </view>
+
+      <button 
+        class="btn-primary" 
+        bindtap="handleSaveProfile"
+        loading="{{saving}}"
+        disabled="{{!avatarPath || !nickName || saving}}"
+      >
+        {{saving ? '保存中...' : '保存并登录'}}
+      </button>
+
+      <view class="privacy-tip">你的头像和昵称仅保存在本地，不会上传到服务器</view>
+    </view>
+  </block>
+
+  <!-- ========== 已登录 ========== -->
+  <block wx:else>
+    <!-- 用户卡片 -->
+    <view class="page-header" style="padding-bottom:60rpx">
+      <image class="profile-avatar-lg" src="{{profile.avatarPath}}" mode="aspectFill" />
+      <view class="profile-name-lg">{{profile.nickName}}</view>
+      <view class="profile-id">🆔 {{profile.openId || profile.userId}}</view>
+    </view>
+
+    <view class="page-body fade-in">
+
+      <!-- ====== 会员信息卡片（核心） ====== -->
+      <!-- 已注册 -->
+      <view class="vip-info-card" wx:if="{{memberInfo && memberInfo.registered}}">
+        <view class="vic-top">
+          <view class="vic-level-badge" style="background:{{memberInfo.memberLevel === 'lifetime' ? '#06b6d4' : memberInfo.memberLevel === 'year' ? '#8b5cf6' : memberInfo.memberLevel === 'month' ? '#f59e0b' : '#9ca3af'}}">
+            <text wx:if="{{memberInfo.memberLevel === 'lifetime'}}">💎 永久会员</text>
+            <text wx:elif="{{memberInfo.memberLevel === 'year'}}">👑 年度会员</text>
+            <text wx:elif="{{memberInfo.memberLevel === 'month'}}">🌟 月度会员</text>
+            <text wx:else>🆓 免费用户</text>
+          </view>
+          <view class="vic-expire" wx:if="{{memberInfo.memberExpireAt > 0}}">
+            {{memberInfo.memberExpireAt}} 到期
+          </view>
+        </view>
+        <view class="vic-stats">
+          <view class="vic-stat">
+            <text class="vic-stat-num {{memberInfo.credits > 0 ? 'has' : 'empty'}}">{{memberInfo.credits || 0}}</text>
+            <text class="vic-stat-label">剩余次数</text>
+          </view>
+          <view class="vic-stat-div"></view>
+          <view class="vic-stat">
+            <text class="vic-stat-num">{{memberInfo.totalQueries || 0}}</text>
+            <text class="vic-stat-label">累计使用</text>
+          </view>
+        </view>
+        <navigator url="/pages/member/member" class="vic-action" open-type="switchTab">
+          <text>💎 查看会员中心 ›</text>
+        </navigator>
+      </view>
+
+      <!-- 未注册 -->
+      <view class="vip-info-card vip-unreg" wx:elif="{{!memberInfo || !memberInfo.registered}}">
+        <view class="vic-top">
+          <view class="vic-level-badge" style="background:#f59e0b">🎁 未注册会员</view>
+        </view>
+        <view class="vic-stats" style="padding:24rpx 0;text-align:center">
+          <text class="vic-unreg-text">注册即送 <text style="color:#6366f1;font-weight:700;font-size:36rpx">1 次</text> 免费测身高体验</text>
+        </view>
+        <button class="vic-reg-btn" bindtap="handleRegisterMember">立即注册 · 领取免费额度</button>
+      </view>
+
+      <!-- 数据概览 -->
+      <view class="stats-row">
+        <view class="stat-card">
+          <view class="stat-val">{{historyCount}}</view>
+          <view class="stat-lbl">测量记录</view>
+        </view>
+        <view class="stat-card">
+          <view class="stat-val">{{storageSize}}</view>
+          <view class="stat-lbl">存储占用</view>
+        </view>
+      </view>
+
+      <!-- 功能菜单 -->
+      <view class="menu-card">
+        <navigator url="/pages/height/height" class="menu-row">
+          <text class="menu-row-icon">📏</text>
+          <text class="menu-row-text">身高测量记录</text>
+          <text class="menu-row-badge" wx:if="{{historyCount > 0}}">{{historyCount}}</text>
+          <text class="menu-row-arrow">›</text>
+        </navigator>
+
+        <view class="menu-row" bindtap="clearHistory">
+          <text class="menu-row-icon">🗑️</text>
+          <text class="menu-row-text">清空测量记录</text>
+          <text class="menu-row-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 个人信息 -->
+      <view class="section-label">👤 个人信息</view>
+      <view class="menu-card">
+        <view class="menu-row" bindtap="showEditProfile">
+          <text class="menu-row-icon">✏️</text>
+          <text class="menu-row-text">修改个人信息</text>
+          <text class="menu-row-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 账户与安全 -->
+      <view class="section-label">🔐 账户与安全</view>
+      <view class="menu-card">
+        <button class="menu-row" open-type="contact" bindcontact="onContact">
+          <text class="menu-row-icon">💬</text>
+          <text class="menu-row-text">联系客服</text>
+          <text class="menu-row-hint">有问题随时找我们</text>
+          <text class="menu-row-arrow">›</text>
+        </button>
+
+        <view class="menu-row" bindtap="showSignOutConfirm">
+          <text class="menu-row-icon">🚪</text>
+          <text class="menu-row-text">退出登录</text>
+          <text class="menu-row-hint">重新登录可找回数据</text>
+          <text class="menu-row-arrow">›</text>
+        </view>
+
+        <view class="menu-row menu-row-danger" bindtap="showLogoutConfirm">
+          <text class="menu-row-icon">⚠️</text>
+          <text class="menu-row-text danger-text">注销账号</text>
+          <text class="menu-row-hint">永久清除所有数据</text>
+          <text class="menu-row-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 管理后台入口 -->
+      <view class="section-label">⚙️ 管理</view>
+      <view class="menu-card">
+        <view class="menu-row" bindtap="goAdmin">
+          <text class="menu-row-icon">⚙️</text>
+          <text class="menu-row-text">管理后台</text>
+          <text class="menu-row-hint">额度管理</text>
+          <text class="menu-row-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 底部留白 -->
+      <view style="height:40rpx"></view>
+    </view>
+
+    <!-- 编辑个人信息弹窗 -->
+    <view class="modal-overlay" wx:if="{{showEditModal}}" bindtap="hideEditModal">
+      <view class="modal-box" catchtap="noop">
+        <view class="modal-title">✏️ 修改个人信息</view>
+        
+        <view class="modal-edit-row">
+          <text class="modal-edit-label">头像</text>
+          <button class="avatar-picker-inline" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+            <image class="avatar-picker-inline-img" src="{{avatarPath || profile.avatarPath}}" mode="aspectFill" />
+            <text class="avatar-picker-inline-tip">点击更换</text>
+          </button>
+        </view>
+
+        <view class="modal-edit-row">
+          <text class="modal-edit-label">昵称</text>
+          <input 
+            class="field-input" 
+            style="flex:1;margin-left:0"
+            type="nickname" 
+            placeholder="{{profile.nickName}}"
+            value="{{nickName}}"
+            bindinput="onNicknameInput"
+            bindblur="onNicknameBlur"
+          />
+        </view>
+
+        <view class="modal-btns">
+          <button class="modal-btn modal-btn-cancel" bindtap="hideEditModal">取消</button>
+          <button 
+            class="modal-btn modal-btn-primary" 
+            bindtap="handleSaveProfile"
+            loading="{{saving}}"
+            disabled="{{saving}}"
+          >
+            保存
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 退出登录弹窗 -->
+    <view class="modal-overlay" wx:if="{{showSignOutModal}}" bindtap="hideSignOutConfirm">
+      <view class="modal-box" catchtap="noop">
+        <view class="modal-icon">🚪</view>
+        <view class="modal-title">确认退出登录？</view>
+        <view class="modal-desc">
+          退出登录后不会清除你的数据。<br/>
+          重新登录即可找回身高测量记录等数据。
+        </view>
+        <view class="modal-btns">
+          <button class="modal-btn modal-btn-cancel" bindtap="hideSignOutConfirm">取消</button>
+          <button class="modal-btn modal-btn-warning" bindtap="handleSignOut">确认退出</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 注销账号弹窗 -->
+    <view class="modal-overlay" wx:if="{{showLogoutModal}}" bindtap="hideLogoutConfirm">
+      <view class="modal-box" catchtap="noop">
+        <view class="modal-icon">⚠️</view>
+        <view class="modal-title">确认注销账号？</view>
+        <view class="modal-desc">
+          ⚠️ 注销后将<text class="bold-red">永久清除</text>所有数据：<br/>
+          • 头像和昵称信息<br/>
+          • 身高测量历史记录<br/>
+          此操作<text class="bold-red">不可撤销</text>！
+        </view>
+        <view class="modal-btns">
+          <button class="modal-btn modal-btn-cancel" bindtap="hideLogoutConfirm">再想想</button>
+          <button class="modal-btn modal-btn-danger" bindtap="handleLogout">确认注销</button>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 错误提示 -->
+  <view class="error-toast" wx:if="{{error}}" bindtap="dismissError">
+    <text class="toast-text">{{error}}</text>
+  </view>
+</view>

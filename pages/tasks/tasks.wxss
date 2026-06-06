@@ -1,0 +1,6 @@
+/* 每日任务页 */
+.page-img {
+  width: 100%;
+  border-radius: 8rpx;
+  display: block;
+}

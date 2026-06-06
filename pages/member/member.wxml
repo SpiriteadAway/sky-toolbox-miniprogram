@@ -1,0 +1,105 @@
+<!-- 会员中心 -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">💎</text>
+    <view class="header-title">会员中心</view>
+    <view class="header-subtitle">管理你的使用额度</view>
+  </view>
+
+  <!-- ========== 未登录 ========== -->
+  <block wx:if="{{!isLoggedIn}}">
+    <view class="page-body fade-in" style="padding-top:30rpx">
+      <view class="card empty-state">
+        <view class="empty-icon">🔒</view>
+        <view class="empty-text">请先登录</view>
+        <button class="btn-primary" style="width:360rpx" bindtap="goLogin">前往登录</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- ========== 已登录 ========== -->
+  <block wx:else>
+    <view class="page-body fade-in" style="padding-top:30rpx">
+      <view class="loading-block" wx:if="{{loading}}">
+        <view class="spinner"></view>
+        <view class="loading-text">加载中...</view>
+      </view>
+
+      <!-- 未注册 -->
+      <block wx:elif="{{!memberInfo.registered}}">
+        <view class="card" style="text-align:center">
+          <view class="empty-icon" style="font-size:100rpx">🎁</view>
+          <view class="empty-text" style="font-size:30rpx;font-weight:600;color:#1e1b4b">欢迎加入</view>
+          <view class="empty-text" style="font-size:26rpx;margin-top:-10rpx">
+            注册即送 <text style="color:#6366f1;font-weight:700">1 次</text> 免费体验额度
+          </view>
+          <button class="btn-primary" bindtap="handleRegister">立即注册</button>
+        </view>
+      </block>
+
+      <!-- 已注册 -->
+      <block wx:else>
+        <!-- 额度卡片 -->
+        <view class="vip-info-card">
+          <view class="vic-top">
+            <view class="vic-level-badge" style="background:{{memberInfo.memberLevel === 'lifetime' ? '#06b6d4' : memberInfo.memberLevel === 'year' ? '#8b5cf6' : memberInfo.memberLevel === 'month' ? '#f59e0b' : '#9ca3af'}}">
+              <text wx:if="{{memberInfo.memberLevel === 'lifetime'}}">💎 永久会员</text>
+              <text wx:elif="{{memberInfo.memberLevel === 'year'}}">👑 年度会员</text>
+              <text wx:elif="{{memberInfo.memberLevel === 'month'}}">🌟 月度会员</text>
+              <text wx:else>🆓 免费用户</text>
+            </view>
+          </view>
+          <view class="vic-stats">
+            <view class="vic-stat">
+              <text class="vic-stat-num {{memberInfo.credits > 0 ? 'has' : 'empty'}}">{{memberInfo.credits || 0}}</text>
+              <text class="vic-stat-label">剩余次数</text>
+            </view>
+            <view class="vic-stat-div"></view>
+            <view class="vic-stat">
+              <text class="vic-stat-num">{{memberInfo.totalQueries || 0}}</text>
+              <text class="vic-stat-label">累计使用</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 需要更多额度 -->
+        <view class="contact-card" wx:if="{{memberInfo.credits <= 0}}">
+          <view class="contact-icon">💬</view>
+          <view class="contact-body">
+            <view class="contact-title">额度用完了？</view>
+            <view class="contact-desc">联系管理员获取更多使用次数</view>
+          </view>
+          <button class="contact-btn" open-type="contact" bindcontact="onContact">联系客服</button>
+        </view>
+
+        <view class="contact-card contact-has-credit" wx:else>
+          <view class="contact-icon">✨</view>
+          <view class="contact-body">
+            <view class="contact-title">需要更多额度？</view>
+            <view class="contact-desc">随时联系管理员补充次数</view>
+          </view>
+          <button class="contact-btn contact-btn-outline" open-type="contact" bindcontact="onContact">联系客服</button>
+        </view>
+
+        <!-- 快速入口 -->
+        <view class="menu-card" style="margin-top:24rpx">
+          <view class="menu-row" bindtap="goHeight" wx:if="{{memberInfo.credits > 0}}">
+            <text class="menu-row-icon">📏</text>
+            <text class="menu-row-text">去测身高</text>
+            <text class="menu-row-badge">可用</text>
+            <text class="menu-row-arrow">›</text>
+          </view>
+        </view>
+
+        <!-- 说明 -->
+        <view class="info-card">
+          <view class="info-title">📌 使用说明</view>
+          <view class="info-item">① 注册即送 <text style="color:#6366f1;font-weight:700">1 次</text> 免费额度</view>
+          <view class="info-item">② 每次身高查询或礼包查询消耗 1 次</view>
+          <view class="info-item">③ 额度用完可联系客服获取更多</view>
+        </view>
+      </block>
+      <view style="height:40rpx"></view>
+    </view>
+  </block>
+</view>

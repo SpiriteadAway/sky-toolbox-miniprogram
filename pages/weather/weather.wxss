@@ -1,0 +1,51 @@
+/* ====== 天气预报页 ====== */
+
+.weather-item {
+  margin-bottom: 16rpx;
+}
+
+.weather-label {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 12rpx;
+}
+
+.page-img {
+  width: 100%;
+  border-radius: 8rpx;
+  display: block;
+}
+
+/* 图片加载失败回退 */
+.img-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 280rpx;
+  background: #f9fafb;
+  border: 2rpx dashed #e5e7eb;
+  border-radius: 10rpx;
+  padding: 40rpx 20rpx;
+  gap: 12rpx;
+}
+
+.img-fallback-icon {
+  font-size: 56rpx;
+  opacity: 0.6;
+}
+
+.img-fallback-text {
+  font-size: 26rpx;
+  color: #9ca3af;
+}
+
+.img-retry-btn {
+  width: 180rpx !important;
+  height: 56rpx !important;
+  line-height: 56rpx !important;
+  font-size: 24rpx !important;
+  margin-top: 4rpx;
+}

@@ -1,0 +1,158 @@
+<!-- 礼包查询 -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">🎁</text>
+    <view class="header-title">礼包查询</view>
+    <view class="header-subtitle">输入礼包兑换 ID，查看礼包详情</view>
+  </view>
+
+  <view class="page-body fade-in">
+    <!-- 输入区 -->
+    <view class="card query-card">
+      <view class="query-label">礼包兑换 ID</view>
+      <view class="input-row">
+        <input 
+          class="code-input" 
+          placeholder="输入光遇长字段 ID"
+          value="{{giftId}}"
+          bindinput="onInputChange"
+          focus="{{inputFocus}}"
+        />
+        <view class="clear-btn" wx:if="{{giftId}}" bindtap="onClear" hover-class="clear-btn-hover">✕</view>
+      </view>
+      <button 
+        class="btn-primary" 
+        bindtap="onSubmit"
+        disabled="{{!giftId || loading}}"
+        loading="{{loading}}"
+      >
+        {{loading ? '查询中...' : '查询礼包'}}
+      </button>
+    </view>
+
+    <!-- ===== 结果 ===== -->
+    <block wx:if="{{result}}">
+      <!-- 概览 -->
+      <view class="card gift-summary fade-in">
+        <view class="gs-row">
+          <text class="gs-label">✅ {{result.msg}}</text>
+          <text class="gs-time" wx:if="{{result.time}}">{{result.time}}</text>
+        </view>
+        <view class="gs-stats">
+          <view class="gs-stat">
+            <text class="gs-stat-val">{{result.count || 0}}</text>
+            <text class="gs-stat-lbl">件物品</text>
+          </view>
+          <view class="gs-stat">
+            <text class="gs-stat-val price">{{result.price || '¥0'}}</text>
+            <text class="gs-stat-lbl">总价值</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 礼包列表 -->
+      <view class="gift-list" wx:if="{{result.data && result.data.length > 0}}">
+        <view 
+          class="gift-card fade-in {{expandedIndex === index ? 'expanded' : ''}}"
+          wx:for="{{result.data}}" 
+          wx:key="name"
+          wx:for-index="index"
+          data-index="{{index}}"
+        >
+          <!-- 头部：图片 + 基本信息 -->
+          <view class="gc-header" bindtap="onToggleDetail" data-index="{{index}}">
+            <image 
+              class="gc-thumb" 
+              src="{{item.image}}" 
+              mode="aspectFill"
+              lazy-load
+            />
+            <view class="gc-info">
+              <view class="gc-name">{{item.name}}</view>
+              <view class="gc-meta">
+                <text class="gc-price">{{item.price}}</text>
+                <text class="gc-badge {{item.is_collab ? 'collab' : ''}}">{{item.collab_status || '非联动'}}</text>
+                <text class="gc-badge type">{{item.giftDetail.type || '礼包'}}</text>
+              </view>
+              <view class="gc-source" wx:if="{{item.giftDetail.source}}">
+                来源：{{item.giftDetail.source}}
+              </view>
+            </view>
+            <view class="gc-arrow {{expandedIndex === index ? 'open' : ''}}">▼</view>
+          </view>
+
+          <!-- 展开详情 -->
+          <view class="gc-detail" wx:if="{{expandedIndex === index && item.giftDetail}}">
+            <view class="gcd-section" wx:if="{{item.giftDetail.filters}}">
+              <view class="gcd-row">
+                <text class="gcd-key">类型</text>
+                <text class="gcd-val">{{item.giftDetail.type || '-'}}</text>
+              </view>
+              <view class="gcd-row">
+                <text class="gcd-key">来源</text>
+                <text class="gcd-val">{{item.giftDetail.source || '-'}}</text>
+              </view>
+              <view class="gcd-row">
+                <text class="gcd-key">年份</text>
+                <text class="gcd-val">{{item.giftDetail.filters.year || '-'}}</text>
+              </view>
+              <view class="gcd-row">
+                <text class="gcd-key">部件</text>
+                <text class="gcd-val">{{item.giftDetail.filters.part || '-'}}</text>
+              </view>
+              <view class="gcd-row">
+                <text class="gcd-key">价格</text>
+                <text class="gcd-val price">{{item.giftDetail.price || item.price}}</text>
+              </view>
+            </view>
+
+            <!-- 物品部件图 -->
+            <view class="gcd-section" wx:if="{{item.giftDetail.item_images && item.giftDetail.item_images.length > 0}}">
+              <view class="gcd-title">📎 部件详情（点击放大）</view>
+              <view class="gcd-images">
+                <view 
+                  class="gcd-img-item"
+                  wx:for="{{item.giftDetail.item_images}}"
+                  wx:key="*this"
+                  wx:for-index="imgIdx"
+                  data-url="{{item}}"
+                  bindtap="onPreviewImage"
+                >
+                  <image class="gcd-img" src="{{item}}" mode="widthFix" lazy-load />
+                  <text class="gcd-img-name" wx:if="{{item.giftDetail.item_file_names && item.giftDetail.item_file_names[imgIdx]}}">
+                    {{item.giftDetail.item_file_names[imgIdx]}}
+                  </text>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 展开详情（无 giftDetail 的简单版） -->
+          <view class="gc-detail" wx:elif="{{expandedIndex === index}}">
+            <view class="gcd-section">
+              <view class="gcd-row">
+                <text class="gcd-key">名称</text>
+                <text class="gcd-val">{{item.name}}</text>
+              </view>
+              <view class="gcd-row">
+                <text class="gcd-key">价格</text>
+                <text class="gcd-val price">{{item.price}}</text>
+              </view>
+              <view class="gcd-row">
+                <text class="gcd-key">联动状态</text>
+                <text class="gcd-val">{{item.collab_status || '非联动'}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 错误 -->
+    <view class="card empty-state fade-in" wx:if="{{error}}">
+      <view class="empty-icon">😞</view>
+      <view class="empty-text" style="white-space:pre-wrap">{{error}}</view>
+      <button class="btn-primary" style="width:240rpx;height:72rpx;line-height:72rpx;font-size:26rpx" bindtap="onSubmit">重新查询</button>
+    </view>
+  </view>
+</view>

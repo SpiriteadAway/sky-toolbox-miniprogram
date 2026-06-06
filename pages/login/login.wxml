@@ -1,0 +1,103 @@
+<!-- 登录页 · 必须登录+注册后才能使用 -->
+<view class="container">
+  <!-- Logo 区 -->
+  <view class="logo-section">
+    <view class="logo">🕯️</view>
+    <view class="app-name">Sky小精灵</view>
+    <view class="app-desc">登录后可同步你的测量记录</view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view class="logged-in" wx:if="{{isLoggedIn}}">
+    <image class="avatar" src="{{profile.avatarPath}}" mode="aspectFill" />
+    <view class="nickname">{{profile.nickName}}</view>
+    <view class="login-status">✅ 已登录</view>
+    <view class="login-time" wx:if="{{loginTime}}">登录时间：{{loginTime}}</view>
+
+    <button class="btn btn-outline" bindtap="goToProfile">查看个人中心</button>
+    <button class="btn btn-outline" bindtap="goHome">返回首页</button>
+  </view>
+
+  <!-- 未登录状态 -->
+  <view class="not-logged-in" wx:else>
+    <!-- 头像选择 -->
+    <view class="login-form">
+      <view class="form-label">设置头像</view>
+      <button 
+        class="avatar-picker" 
+        open-type="chooseAvatar" 
+        bindchooseavatar="onChooseAvatar"
+      >
+        <image 
+          wx:if="{{avatarPath}}" 
+          class="avatar-preview" 
+          src="{{avatarPath}}" 
+          mode="aspectFill" 
+        />
+        <view wx:else class="avatar-placeholder">
+          <view class="placeholder-icon">📷</view>
+          <view class="placeholder-text">点击选择头像</view>
+        </view>
+      </button>
+
+      <!-- 昵称输入 -->
+      <view class="form-label">设置昵称</view>
+      <input 
+        class="nickname-input" 
+        type="nickname" 
+        placeholder="请输入你的昵称"
+        value="{{nickName}}"
+        bindinput="onNicknameInput"
+        bindblur="onNicknameBlur"
+      />
+
+      <!-- 确认登录 -->
+      <button 
+        class="btn btn-primary" 
+        bindtap="handleConfirmLogin"
+        loading="{{loading}}"
+        disabled="{{loading}}"
+      >
+        {{loading ? '登录中...' : '确认登录'}}
+      </button>
+
+      <!-- 降级：旧版一键登录 -->
+      <view class="divider">
+        <view class="divider-line"></view>
+        <view class="divider-text">或</view>
+        <view class="divider-line"></view>
+      </view>
+      <button 
+        class="btn btn-wechat" 
+        bindtap="handleLogin"
+        loading="{{loading}}"
+        disabled="{{loading}}"
+      >
+        <view class="wechat-icon">💚</view>
+        <view>{{loading ? '登录中...' : '微信一键登录（旧版）'}}</view>
+      </button>
+    </view>
+
+    <view class="features">
+      <view class="feature-item">
+        <view class="feature-icon">📏</view>
+        <view class="feature-text">身高测量记录永久保存</view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">📋</view>
+        <view class="feature-text">查看历史查询数据</view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">🎁</view>
+        <view class="feature-text">注册即送1次免费体验</view>
+      </view>
+    </view>
+
+    <view class="privacy-tip">仅获取你的微信昵称和头像，不收集其他信息</view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-toast" wx:if="{{error}}">
+    <view class="toast-text">{{error}}</view>
+  </view>
+</view>

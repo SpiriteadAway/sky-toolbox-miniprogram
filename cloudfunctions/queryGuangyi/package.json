@@ -1,0 +1,9 @@
+{
+  "name": "queryGuangyi",
+  "version": "1.0.0",
+  "description": "光翼查询云函数（代理 HTTP API）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

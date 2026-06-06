@@ -1,0 +1,9 @@
+{
+  "name": "systemConfig",
+  "version": "1.0.0",
+  "description": "系统全局配置（免费模式开关等）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

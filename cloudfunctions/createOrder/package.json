@@ -1,0 +1,10 @@
+{
+  "name": "createOrder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest",
+    "axios": "^1.6.0",
+    "xml2js": "^0.6.2"
+  }
+}

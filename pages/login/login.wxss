@@ -1,0 +1,265 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  box-sizing: border-box;
+}
+
+/* Logo */
+.logo-section {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.logo {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+}
+
+.app-name {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 12rpx;
+}
+
+.app-desc {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 已登录 */
+.logged-in {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 24rpx;
+  background: #eee;
+}
+
+.nickname {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 12rpx;
+}
+
+.login-status {
+  font-size: 28rpx;
+  color: #0c7;
+  margin-bottom: 10rpx;
+}
+
+.login-time {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 60rpx;
+}
+
+/* 未登录 */
+.not-logged-in {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.features {
+  width: 100%;
+  margin-bottom: 60rpx;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  padding: 28rpx 30rpx;
+  margin-bottom: 16rpx;
+}
+
+.feature-icon {
+  font-size: 44rpx;
+  margin-right: 20rpx;
+}
+
+.feature-text {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 按钮 */
+.btn {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  margin-bottom: 20rpx;
+}
+
+.btn-wechat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #07c160;
+  color: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.3);
+}
+
+.wechat-icon {
+  font-size: 36rpx;
+  margin-right: 12rpx;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.privacy-tip {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  margin-top: 10rpx;
+}
+
+/* 错误 */
+.error-toast {
+  position: fixed;
+  top: 100rpx;
+  left: 40rpx;
+  right: 40rpx;
+  background: rgba(255, 77, 79, 0.95);
+  border-radius: 16rpx;
+  padding: 20rpx 30rpx;
+  z-index: 999;
+}
+
+.toast-text {
+  color: #fff;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+/* 登录表单 */
+.login-form {
+  width: 100%;
+  margin-bottom: 40rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 16rpx;
+  margin-top: 32rpx;
+}
+
+.form-label:first-child {
+  margin-top: 0;
+}
+
+/* 头像选择器 */
+.avatar-picker {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0 auto 16rpx;
+  background: transparent;
+  border: none;
+  line-height: 1;
+  overflow: hidden;
+}
+
+.avatar-picker::after {
+  border: none;
+}
+
+.avatar-preview {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+}
+
+.avatar-placeholder {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 3rpx dashed rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-icon {
+  font-size: 48rpx;
+  margin-bottom: 8rpx;
+}
+
+.placeholder-text {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* 昵称输入 */
+.nickname-input {
+  width: 100%;
+  height: 88rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.nickname-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* 主按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(99, 102, 241, 0.35);
+  margin-top: 40rpx;
+}
+
+/* 分割线 */
+.divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 32rpx 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1rpx;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.divider-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 0 24rpx;
+}

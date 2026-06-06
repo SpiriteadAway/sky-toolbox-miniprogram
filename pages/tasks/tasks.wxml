@@ -1,0 +1,29 @@
+<!-- 每日任务 - 应天API -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">📋</text>
+    <view class="header-title">每日任务</view>
+    <view class="header-subtitle">查看今日任务位置指南</view>
+  </view>
+
+  <view class="page-body fade-in">
+    <view class="loading-block" wx:if="{{loading}}">
+      <view class="spinner"></view>
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <view class="card empty-state" wx:if="{{error}}">
+      <view class="empty-icon">😞</view>
+      <view class="empty-text">{{error}}</view>
+      <button class="btn-primary" style="width:240rpx;height:72rpx;line-height:72rpx;font-size:26rpx" bindtap="load">重试</button>
+    </view>
+
+    <view wx:if="{{!loading && !error && imageSrc}}">
+      <view class="tip-bar"><text>💡 长按图片可保存</text></view>
+      <view class="card" style="padding:8rpx;overflow:hidden">
+        <image class="page-img" src="{{imageSrc}}" mode="widthFix" show-menu-by-longpress />
+      </view>
+      <button class="btn-primary" style="margin-top:20rpx" bindtap="save">💾 保存到相册</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,51 @@
+<!-- 活动日历页 -->
+<view class="page-container">
+  <view class="page-header">
+    <text class="header-icon">📅</text>
+    <view class="header-title">活动日历</view>
+    <view class="header-subtitle">查看当前活动安排与时间线</view>
+  </view>
+
+  <view class="page-body fade-in">
+    <!-- 加载 -->
+    <view class="loading-block" wx:if="{{loading}}">
+      <view class="spinner"></view>
+      <view class="loading-text">加载中...</view>
+      <view class="debug-text" wx:if="{{debugInfo}}">{{debugInfo}}</view>
+    </view>
+
+    <!-- 错误 -->
+    <view class="card empty-state" wx:if="{{error}}">
+      <view class="empty-icon">😞</view>
+      <view class="empty-text">{{error}}</view>
+      <view class="debug-text" wx:if="{{debugInfo}}">{{debugInfo}}</view>
+      <button class="btn-primary" style="width:240rpx;height:72rpx;line-height:72rpx;font-size:26rpx" bindtap="onLoadImage">重新加载</button>
+    </view>
+
+    <!-- 图片 -->
+    <view wx:if="{{imageSrc}}">
+      <view class="tip-bar">
+        <text>💡 长按图片可保存，或使用下方按钮</text>
+      </view>
+      <view class="card" style="padding:8rpx;overflow:hidden">
+        <image 
+          class="page-img" 
+          src="{{imageSrc}}" 
+          mode="widthFix"
+          show-menu-by-longpress
+          bindload="onImageLoad"
+          binderror="onImageError"
+        />
+      </view>
+
+      <view style="display:flex;gap:16rpx;margin-top:20rpx">
+        <button class="btn-primary" style="flex:1" bindtap="onSaveImage" disabled="{{!imageSrc}}">
+          💾 保存到相册
+        </button>
+        <button class="btn-outline" style="flex:1" bindtap="onLoadImage" loading="{{loading}}">
+          🔄 刷新
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

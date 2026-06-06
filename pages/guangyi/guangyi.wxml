@@ -1,0 +1,144 @@
+<!-- 光翼查询页 -->
+<view class="page-container">
+  <!-- Header -->
+  <view class="page-header">
+    <text class="header-icon">✨</text>
+    <view class="header-title">光翼查询</view>
+    <view class="header-subtitle">查看光翼收集进度 · 共 258 个</view>
+  </view>
+
+  <view class="page-body fade-in">
+    <!-- 输入区 -->
+    <view class="card query-card">
+      <view class="query-label">光遇 ID</view>
+      <view class="input-row">
+        <view class="input-icon">🔑</view>
+        <input class="query-input" placeholder="输入光遇 ID" value="{{codeValue}}"
+          bindinput="onInputChange" confirm-type="search" bindconfirm="onSubmit" />
+        <view class="input-clear" wx:if="{{codeValue}}" bindtap="onClear"><text>✕</text></view>
+      </view>
+      <button class="query-btn" bindtap="onSubmit" disabled="{{!codeValue || loading}}" loading="{{loading}}">
+        {{loading ? '查询中...' : '✨ 查询光翼'}}
+      </button>
+    </view>
+
+    <!-- 加载 -->
+    <view class="loading-bar" wx:if="{{loading}}">
+      <view class="loading-dot"></view>
+      <view class="loading-dot"></view>
+      <view class="loading-dot"></view>
+      <text class="loading-text">查询中...</text>
+    </view>
+
+    <!-- 错误 -->
+    <view class="card empty-state fade-in" wx:if="{{error && !loading}}">
+      <view class="empty-icon">😞</view>
+      <view class="empty-text">{{error}}</view>
+    </view>
+
+    <!-- 结果 -->
+    <block wx:if="{{hasResult && !loading}}">
+
+      <!-- 总览 -->
+      <view class="overview-row fade-in">
+        <view class="overview-card oc-normal">
+          <text class="oc-emoji">🗺️</text>
+          <text class="oc-label">普通光翼</text>
+          <view class="oc-stat"><text class="oc-cur">{{normalCollected}}</text><text class="oc-div">/</text><text class="oc-tot">126</text></view>
+          <view class="oc-bar"><view class="oc-bar-fill" style="width:{{normalRate}}%"></view></view>
+          <text class="oc-pct">{{normalRate}}%</text>
+        </view>
+        <view class="overview-card oc-perm">
+          <text class="oc-emoji">👻</text>
+          <text class="oc-label">永久光翼</text>
+          <view class="oc-stat"><text class="oc-cur">{{permTotalCollected}}</text><text class="oc-div">/</text><text class="oc-tot">132</text></view>
+          <view class="oc-bar"><view class="oc-bar-fill" style="width:{{permTotalRate}}%"></view></view>
+          <text class="oc-pct">{{permTotalRate}}%</text>
+        </view>
+      </view>
+
+      <!-- 普通光翼 -->
+      <view class="section-title">
+        <view class="st-dot green"></view>
+        <text>普通光翼</text>
+        <text class="st-count">{{normalCollected}} / 126</text>
+      </view>
+
+      <view class="map-grid">
+        <view 
+          class="map-card fade-in {{normalMaps.length % 2 === 1 && index === normalMaps.length - 1 ? 'map-card-last' : ''}}" 
+          wx:for="{{normalMaps}}" 
+          wx:key="map"
+        >
+          <view class="map-card-top">
+            <text class="map-card-emoji">{{item.emoji}}</text>
+            <view class="map-card-info">
+              <text class="map-card-name">{{item.map}}</text>
+              <text class="map-card-stat">{{item.collected}} / {{item.total}}</text>
+            </view>
+            <text class="map-card-pct {{item.isFull ? 'done' : ''}}">{{item.rateText}}%</text>
+          </view>
+          <view class="map-card-bar">
+            <view class="map-card-fill {{item.isFull ? 'done' : ''}}" style="width:{{item.rateWidth}}%"></view>
+          </view>
+        </view>
+      </view>
+
+      <view class="missing-wrap" wx:if="{{normalMissing.length > 0}}">
+        <view class="missing-tag" wx:for="{{normalMissing}}" wx:key="map" wx:if="{{item.count > 0}}">
+          <text class="missing-tag-emoji">{{item.emoji}}</text>
+          <text>{{item.map}}</text>
+          <text wx:if="{{item.area}}"> · {{item.area}}</text>
+          <text class="missing-tag-count">{{item.count}}</text>
+        </view>
+      </view>
+
+      <!-- 复刻永久 -->
+      <view class="section-title">
+        <view class="st-dot gold"></view>
+        <text>复刻永久</text>
+        <text class="st-count">{{permTravelCollected}} / {{permTravelTotal}}</text>
+      </view>
+
+      <view class="perm-row">
+        <view class="perm-card perm-travel fade-in">
+          <view class="perm-card-top">
+            <text class="perm-card-emoji">💫</text>
+            <view class="perm-card-info">
+              <text class="perm-card-name">旅行先祖</text>
+              <text class="perm-card-desc">已收集 {{permTravelCollected}} · 缺 {{permTravelMissing}} 个</text>
+            </view>
+            <text class="perm-card-pct {{permTravelRate === 100 ? 'done' : ''}}">{{permTravelRate}}%</text>
+          </view>
+          <view class="perm-card-bar">
+            <view class="perm-card-fill {{permTravelRate === 100 ? 'done' : ''}}" style="width:{{permTravelRate}}%"></view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 普通永久 -->
+      <view class="section-title">
+        <view class="st-dot purple"></view>
+        <text>普通永久</text>
+        <text class="st-count">{{permNormalCollected}} / {{permNormalTotal}}</text>
+      </view>
+
+      <view class="perm-row">
+        <view class="perm-card fade-in">
+          <view class="perm-card-top">
+            <text class="perm-card-emoji">🕯️</text>
+            <view class="perm-card-info">
+              <text class="perm-card-name">常驻先祖</text>
+              <text class="perm-card-desc">已收集 {{permNormalCollected}} 个</text>
+            </view>
+            <text class="perm-card-pct {{permNormalRate === 100 ? 'done' : ''}}">{{permNormalRate}}%</text>
+          </view>
+          <view class="perm-card-bar">
+            <view class="perm-card-fill {{permNormalRate === 100 ? 'done' : ''}}" style="width:{{permNormalRate}}%"></view>
+          </view>
+        </view>
+      </view>
+
+    </block>
+  </view>
+</view>

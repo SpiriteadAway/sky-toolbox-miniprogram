@@ -1,0 +1,16 @@
+/* ====== 活动日历页 ====== */
+
+.debug-text {
+  margin-top: 12rpx;
+  font-size: 20rpx;
+  color: #d4d4d8;
+  word-break: break-all;
+  padding: 0 20rpx;
+  text-align: center;
+}
+
+.page-img {
+  width: 100%;
+  border-radius: 8rpx;
+  display: block;
+}

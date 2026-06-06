@@ -1,0 +1,103 @@
+<!-- 身高查询页 -->
+<view class="page-container">
+  <!-- 顶部 -->
+  <view class="page-header">
+    <text class="header-icon">📏</text>
+    <view class="header-title">身高查询</view>
+    <view class="header-subtitle">输入好友码，查看详细数值</view>
+  </view>
+
+  <view class="page-body fade-in">
+    <!-- 登录提示 -->
+    <view class="tip-bar" wx:if="{{!isLoggedIn}}" bindtap="goLogin">
+      <text>🔒 需要注册才能使用，新用户送 1 次体验 ›</text>
+    </view>
+
+    <!-- 已登录但未注册会员 -->
+    <view class="tip-bar tip-warn" wx:elif="{{isLoggedIn && (!memberInfo || !memberInfo.registered)}}">
+      <text>🎁 尚未注册，注册即送 1 次免费体验！</text>
+      <text class="tip-link" bindtap="goLogin">去购买页注册 ›</text>
+    </view>
+
+    <!-- 已注册显示额度 -->
+    <view class="credit-bar" wx:elif="{{isLoggedIn && memberInfo && memberInfo.registered}}">
+      <text class="credit-num">{{credits}}</text>
+      <text class="credit-label">剩余次数</text>
+    </view>
+
+    <!-- 输入区 -->
+    <view class="card query-card">
+      <view class="query-label">好友码</view>
+      <view class="input-row">
+        <input 
+          class="code-input" 
+          placeholder="XXXX-XXXX-XXX"
+          value="{{codeValue}}"
+          bindinput="onInputChange"
+          focus="{{inputFocus}}"
+        />
+        <view class="clear-btn" wx:if="{{codeValue}}" bindtap="onClear" hover-class="clear-btn-hover">✕</view>
+      </view>
+      <button 
+        class="btn-primary" 
+        bindtap="onSubmit"
+        disabled="{{!codeValue || loading}}"
+        loading="{{loading}}"
+      >
+        {{loading ? '查询中...' : '查询身高'}}
+      </button>
+    </view>
+
+    <!-- 结果区 -->
+    <view class="card result-card fade-in" wx:if="{{result}}">
+      <view class="section-label">📊 查询结果</view>
+      <view class="result-msg">✅ {{result.msg}}</view>
+      <view class="result-time" wx:if="{{result.time}}">🕐 {{result.time}}</view>
+      
+      <view class="result-img-wrap" wx:if="{{result.url}}">
+        <image 
+          class="result-img" 
+          src="{{result.url}}" 
+          mode="widthFix"
+          show-menu-by-longpress
+        />
+        <view class="result-img-tip">💡 长按图片可保存</view>
+      </view>
+    </view>
+
+    <!-- 错误 -->
+    <view class="card empty-state fade-in" wx:if="{{error}}">
+      <view class="empty-icon">😞</view>
+      <view class="empty-text" style="white-space:pre-wrap">{{error}}</view>
+      <button class="btn-primary" style="width:240rpx;height:72rpx;line-height:72rpx;font-size:26rpx" bindtap="onSubmit">重新查询</button>
+    </view>
+
+    <!-- 历史记录 -->
+    <view class="card" wx:if="{{isLoggedIn && historyList.length > 0}}">
+      <view class="history-header" bindtap="toggleHistory">
+        <view class="history-title-row">
+          <text class="section-label" style="padding:0">📜 测量历史</text>
+          <text class="history-count">{{historyList.length}} 条</text>
+        </view>
+        <text class="history-toggle {{showHistory ? 'open' : ''}}">▼</text>
+      </view>
+      
+      <view class="history-list" wx:if="{{showHistory}}">
+        <view 
+          class="history-item fade-in" 
+          wx:for="{{historyList}}" 
+          wx:key="id"
+          data-record="{{item}}"
+          bindtap="onHistoryTap"
+        >
+          <view class="hi-left">
+            <view class="hi-code">{{item.code}}</view>
+            <view class="hi-msg">✅ {{item.msg}}</view>
+            <view class="hi-time">🕐 {{item.time}}</view>
+          </view>
+          <text class="hi-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
