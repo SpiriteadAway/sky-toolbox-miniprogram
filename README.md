@@ -25,7 +25,7 @@
   - 云函数：Node.js
   - 数据库：云开发数据库
   - 数据预拉取
-- **第三方 API**：[应天 API]([https://api.t1qq.com](https://api.t1qq.com/user/register?cps=zjXCv8z) 提供游戏数据
+- **第三方 API**：[应天 API](https://api.t1qq.com/user/register?cps=zjXCv8z) 提供游戏数据
 
 ## 📁 项目结构
 
